@@ -1,73 +1,142 @@
-# React + TypeScript + Vite
+# PWA IONOS - Mariela Higuera
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Universidad Tecnológica de Tijuana
+**Materia:** Desarrollo Web Profesional  
+**Docente:** Miguel Ángel Cardona Contreras  
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+# Parte 1: Investigación Técnica - Pilares de una PWA
 
-## React Compiler
+## Introducción
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Una Progressive Web Application (PWA) es una aplicación web que utiliza tecnologías modernas del navegador para ofrecer una experiencia similar a una aplicación nativa. Permite instalación en el dispositivo, funcionamiento offline y mejor rendimiento.
 
-## Expanding the ESLint configuration
+Las PWAs se basan principalmente en tres pilares: Web App Manifest, Service Workers y ejecución bajo HTTPS.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 1. Web App Manifest (manifest.json)
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+El Web App Manifest es un archivo en formato JSON que permite que una aplicación web sea reconocida como instalable por el navegador y el sistema operativo.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### theme_color
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Define el color principal de la interfaz cuando la aplicación está abierta. En dispositivos móviles influye en la barra superior del sistema.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### background_color
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Define el color que aparece en la pantalla de carga (splash screen) mientras la aplicación se inicializa.
+
+### display (standalone vs browser)
+
+La propiedad `display` controla cómo se muestra la aplicación:
+
+- `browser`: Se comporta como un sitio web tradicional.
+- `standalone`: Se muestra como una aplicación independiente sin barra del navegador.
+
+El modo `standalone` permite que la experiencia sea similar a una aplicación nativa.
+
+### Importancia del array de icons
+
+El array `icons` define múltiples tamaños de iconos (generalmente 192x192 y 512x512 píxeles).
+
+Son necesarios para:
+
+- Instalación en pantalla de inicio  
+- Splash screen  
+- Compatibilidad con distintos dispositivos  
+- Icono del sistema operativo  
+
+Sin iconos válidos, el navegador puede no permitir la instalación.
+
+---
+
+## 2. Service Workers
+
+Un Service Worker es un script que se ejecuta en segundo plano y actúa como un proxy programable entre la aplicación web y la red.
+
+No tiene acceso directo al DOM y se ejecuta de manera independiente al hilo principal.
+
+### Proceso de Registro
+
+El Service Worker se registra desde el archivo principal utilizando:
+
+`navigator.serviceWorker.register('/sw.js')`
+
+Esto permite que el navegador lo instale y lo ejecute automáticamente.
+
+### Ciclo de Vida
+
+#### Installation
+
+Se ejecuta cuando el Service Worker se instala por primera vez.  
+En esta etapa se almacenan en caché los recursos esenciales (App Shell).
+
+#### Activation
+
+Ocurre cuando el Service Worker reemplaza una versión anterior.  
+Permite eliminar cachés antiguos y tomar control de la aplicación.
+
+#### Fetching
+
+Intercepta las solicitudes de red realizadas por la aplicación.  
+Permite decidir si responder desde caché o desde la red.
+
+### ¿Cómo actúan como proxy de red?
+
+El Service Worker intercepta las solicitudes HTTP mediante el evento `fetch`.
+
+Desde ese punto puede:
+
+- Servir contenido desde caché  
+- Modificar respuestas  
+- Reintentar solicitudes  
+- Implementar estrategias de almacenamiento  
+
+Esto permite funcionamiento offline y mejora el rendimiento.
+
+---
+
+## 3. Estrategias de Almacenamiento (Caching)
+
+### Cache First
+
+Busca primero en caché y solo va a la red si no encuentra el recurso.  
+Ideal para archivos estáticos.
+
+### Network First
+
+Intenta primero obtener el recurso desde la red.  
+Si falla, utiliza la versión en caché.  
+Ideal para datos dinámicos.
+
+### Stale-While-Revalidate
+
+Sirve inmediatamente desde caché y actualiza en segundo plano.  
+Combina velocidad y actualización constante.
+
+---
+
+## 4. Seguridad y TLS
+
+### ¿Por qué HTTPS es un requisito habilitador para los Service Workers?
+
+Los Service Workers solo funcionan en contextos seguros (HTTPS).
+
+Esto es obligatorio porque pueden interceptar y modificar tráfico de red.  
+HTTPS garantiza:
+
+- Integridad del código  
+- Protección contra ataques Man-in-the-Middle  
+- Seguridad en la transmisión de datos  
+
+### Impacto de los certificados en el "Install Prompt"
+
+El navegador solo permite instalar una PWA si:
+
+- El sitio está servido bajo HTTPS  
+- Existe un manifest válido  
+- Existe un Service Worker activo  
+
+Sin certificado SSL válido, la aplicación no será considerada instalable.
