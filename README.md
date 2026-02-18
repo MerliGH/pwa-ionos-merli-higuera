@@ -20,6 +20,25 @@ Las PWAs se basan principalmente en tres pilares: Web App Manifest, Service Work
 
 El Web App Manifest es un archivo en formato JSON que permite que una aplicación web sea reconocida como instalable por el navegador y el sistema operativo.
 
+### short_name
+
+Define el nombre corto que aparece debajo del icono cuando la aplicación se instala en la pantalla de inicio.
+
+### start_url
+
+Indica la página que se abre cuando el usuario inicia la aplicación instalada.  
+Generalmente es `/` o `index.html`.
+
+### Información general del manifest
+
+El manifest también puede incluir:
+
+- `name`: Nombre completo de la aplicación.
+- `description`: Breve descripción de la aplicación.
+- `author`: Información del desarrollador o institución.
+
+Estos metadatos permiten que el sistema operativo identifique correctamente la aplicación instalada.
+
 ### theme_color
 
 Define el color principal de la interfaz cuando la aplicación está abierta. En dispositivos móviles influye en la barra superior del sistema.
@@ -56,7 +75,16 @@ Sin iconos válidos, el navegador puede no permitir la instalación.
 
 Un Service Worker es un script que se ejecuta en segundo plano y actúa como un proxy programable entre la aplicación web y la red.
 
-No tiene acceso directo al DOM y se ejecuta de manera independiente al hilo principal.
+NO tiene acceso directo al DOM, ya que se ejecuta fuera del hilo principal.  
+La comunicación con la aplicación se realiza mediante `postMessage`.
+
+Es la base para funcionalidades avanzadas como:
+
+- Soporte offline
+- Notificaciones push
+- Background Sync
+- Estrategias avanzadas de caché
+
 
 ### Proceso de Registro
 
@@ -73,10 +101,15 @@ Esto permite que el navegador lo instale y lo ejecute automáticamente.
 Se ejecuta cuando el Service Worker se instala por primera vez.  
 En esta etapa se almacenan en caché los recursos esenciales (App Shell).
 
+Durante la fase de Installation es el momento ideal para almacenar en caché los activos estáticos principales, conocidos como App Shell (estructura base de la aplicación).
+
 #### Activation
 
 Ocurre cuando el Service Worker reemplaza una versión anterior.  
 Permite eliminar cachés antiguos y tomar control de la aplicación.
+
+En la fase de Activation, cuando el Service Worker anterior es liberado, se eliminan versiones antiguas de caché para evitar conflictos y mantener la aplicación actualizada.
+
 
 #### Fetching
 
