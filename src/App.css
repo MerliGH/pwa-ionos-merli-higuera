@@ -3,7 +3,7 @@ body {
   font-family: "Inter", "Segoe UI", sans-serif;
   background: #f4f6f9;
 
-  /* CENTRADO REAL */
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -58,7 +58,7 @@ input::placeholder {
   color: #6b7280;
 }
 
-/* BOTÓN GUARDAR AZUL */
+
 button:not(.delete-btn) {
   padding: 12px 18px;
   border-radius: 10px;
@@ -85,7 +85,7 @@ li {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #1e293b; /* azul más vivo */
+  background: #1e293b; 
   padding: 16px;
   border-radius: 14px;
   margin-bottom: 18px;
@@ -102,10 +102,10 @@ li span {
   max-width: 80%;
 }
 
-/* BOTÓN ELIMINAR LILA */
+
 .delete-btn {
   background-color: #a855f7;
-  color: white;          /* ❌ BLANCA */
+  color: white;       
   font-weight: bold;
   border: none;
   padding: 10px 14px;

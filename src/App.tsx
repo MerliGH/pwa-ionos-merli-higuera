@@ -4,18 +4,18 @@ import "./App.css";
 function App() {
   const [note, setNote] = useState("");
   const [notes, setNotes] = useState<string[]>([]);
-  const [loaded, setLoaded] = useState(false); // 👈 bandera nueva
+  const [loaded, setLoaded] = useState(false); 
 
-  // Cargar notas guardadas
+  //Cargar notas guardadas
   useEffect(() => {
     const savedNotes = localStorage.getItem("notes");
     if (savedNotes) {
       setNotes(JSON.parse(savedNotes));
     }
-    setLoaded(true); // 👈 marcamos que ya cargó
+    setLoaded(true); 
   }, []);
 
-  // Guardar solo después de haber cargado
+  //Guardar solo después de haber cargado
   useEffect(() => {
     if (loaded) {
       localStorage.setItem("notes", JSON.stringify(notes));
