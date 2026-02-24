@@ -1,42 +1,125 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+body {
+  margin: 0;
+  font-family: "Inter", "Segoe UI", sans-serif;
+  background: #f4f6f9;
+
+  /* CENTRADO REAL */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .card {
-  padding: 2em;
+  background: #111827;
+  padding: 50px 40px;
+  border-radius: 20px;
+  width: 400px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+  text-align: center;
+  color: white;
 }
 
-.read-the-docs {
-  color: #888;
+h1 {
+  margin-bottom: 10px;
+  font-size: 28px;
+}
+
+.subtitle {
+  color: #9ca3af;
+  margin-bottom: 30px;
+  font-size: 14px;
+}
+
+.input-group {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+input {
+  flex: 1;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #374151;
+  background-color: #0f172a;
+  color: white;
+  outline: none;
+}
+
+input::placeholder {
+  color: #6b7280;
+}
+
+/* BOTÓN GUARDAR AZUL */
+button:not(.delete-btn) {
+  padding: 12px 18px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  background-color: #2563eb;
+  color: white;
+  transition: 0.2s ease;
+}
+
+button:not(.delete-btn):hover {
+  background-color: #1d4ed8;
+}
+
+/* Lista */
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1e293b; /* azul más vivo */
+  padding: 16px;
+  border-radius: 14px;
+  margin-bottom: 18px;
+  transition: 0.2s ease;
+}
+
+li:hover {
+  background: #253861;
+}
+
+li span {
+  text-align: left;
+  word-break: break-word;
+  max-width: 80%;
+}
+
+/* BOTÓN ELIMINAR LILA */
+.delete-btn {
+  background-color: #a855f7;
+  color: white;          /* ❌ BLANCA */
+  font-weight: bold;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.delete-btn:hover {
+  background-color: #9333ea;
+}
+
+.empty {
+  margin-top: 20px;
+  color: #9ca3af;
+  font-size: 14px;
 }

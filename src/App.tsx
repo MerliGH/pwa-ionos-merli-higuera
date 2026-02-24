@@ -1,35 +1,74 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [note, setNote] = useState("");
+  const [notes, setNotes] = useState<string[]>([]);
+  const [loaded, setLoaded] = useState(false); // 👈 bandera nueva
+
+  // Cargar notas guardadas
+  useEffect(() => {
+    const savedNotes = localStorage.getItem("notes");
+    if (savedNotes) {
+      setNotes(JSON.parse(savedNotes));
+    }
+    setLoaded(true); // 👈 marcamos que ya cargó
+  }, []);
+
+  // Guardar solo después de haber cargado
+  useEffect(() => {
+    if (loaded) {
+      localStorage.setItem("notes", JSON.stringify(notes));
+    }
+  }, [notes, loaded]);
+
+  const addNote = () => {
+    if (note.trim() === "") return;
+    setNotes([...notes, note]);
+    setNote("");
+  };
+
+  const deleteNote = (index: number) => {
+    const updatedNotes = notes.filter((_, i) => i !== index);
+    setNotes(updatedNotes);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
+    <div className="container">
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+        <h1>App de notas</h1>
+        <p className="subtitle">Guarda tus ideas y recordatorios</p>
+
+        <div className="input-group">
+          <input
+            type="text"
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            placeholder="Escribe una nota..."
+          />
+          <button onClick={addNote}>Guardar</button>
+        </div>
+
+        <ul>
+          {notes.map((n, index) => (
+            <li key={index}>
+              <span>{n}</span>
+              <button
+                className="delete-btn"
+                onClick={() => deleteNote(index)}
+              >
+                X
+              </button>
+            </li>
+          ))}
+        </ul>
+
+        {notes.length === 0 && (
+          <p className="empty">No hay notas aún...</p>
+        )}
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;
